@@ -1,10 +1,24 @@
 #gridContainer {
     border: 3px solid black;
-    height: 90vh;
+    /* height: 90vh; */
     overflow: hidden;
+    height: 480px;
+    width: 720px;
 }
 
 .grid {
     display: grid;
     height: 100%;
+}
+
+.paletteWrap{
+    display: inline-block;
+    border: 3px solid black;
+    margin: 20px;
+}
+
+.palette-color{
+    display: inline-block;
+    height: 100px;
+    width: 50px;
 }

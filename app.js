@@ -1,7 +1,7 @@
 // Variables that are used
-const colors = ["#B2BD7E", "#E9D985", "#749C75", "#6A5D7B", "#5D4A66", "#FFA630", "#4DA1A9", "#2E5077", "#611C35", "#7FB069",
-    "#CA3C25", "#E6AA68", "#D56AA0", "#A64253", "#861657", "#F5CAC3", "#083D77", "#2E4057", "#F4D35E", "#F6D8AE",
-    "white", "white", "white", "black", "black", "black", "black", "black",];
+const availableColors = ["#B2BD7E", "#E9D985", "#749C75", "#6A5D7B", "#5D4A66", "#FFA630", "#4DA1A9", "#2E5077", "#611C35", "#7FB069",
+    "#CA3C25", "#E6AA68", "#D56AA0", "#A64253", "#861657", "#F5CAC3", "#083D77", "#2E4057", "#F4D35E", "#F6D8AE"];
+const colors = ["white", "black", "#48656F", "#71908C"];
 const elements = Math.floor(Math.random() * 42) + 4;
 const x = Math.floor(Math.random() * 23) + 3;
 
@@ -19,8 +19,11 @@ const smallChevrons = function (p, b) {
 const honeycomb = function (p, b) {
     return `background: radial-gradient(circle farthest-side at 0% 50%,${p} 23.5%,rgba(240,166,17,0) 0)21px 30px, radial-gradient(circle farthest-side at 0% 50%,${b} 24%,rgba(240,166,17,0) 0)19px 30px, linear-gradient(${p} 14%,rgba(240,166,17,0) 0, rgba(240,166,17,0) 85%,${p} 0)0 0, linear-gradient(150deg,${p} 24%,${b} 0,${b} 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,${b} 0,${b} 76%,${p} 0)0 0, linear-gradient(30deg,${p} 24%,${b} 0,${b} 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,${b} 0,${b} 76%,${p} 0)0 0, linear-gradient(90deg,${b} 2%,${p} 0,${p} 98%,${b} 0%)0 0 ${p}; background-size: 40px 60px;`
 }
+const solid = function (p) {
+    return `background-color: ${p}`;
+}
 
-const patternArr = [bigChevrons, herringbone, smallChevrons, honeycomb];
+const patternArr = [bigChevrons, herringbone, smallChevrons, honeycomb, solid, solid, solid];
 
 // Variable that will be the HTML code
 let gridHtml = "<div class='grid' style='display:grid;grid-template-columns:";
@@ -49,22 +52,42 @@ let randomSpan = () => {
 }
 
 // Code to build HTML
-// Build CSS to auto format the columns
-for (i = 1; i <= x; i++) {
-    gridHtml += " auto"
+// const artDiv = () => {
+    // Build CSS to auto format the columns
+    for (i = 1; i <= x; i++) {
+        gridHtml += " auto"
+    }
+    // Randomly generate a gap between grid elements
+    gridHtml += `; grid-gap:${randomGap()}em'>`;
+
+
+    // Build the cells HTML
+    for (i = 0; i <= elements; i++) {
+        let cell = `<div class="cell" style="${patternArr[patternSelector()](colors[colorSelector()], colors[colorSelector()])}; grid-column:span ${randomSpan()}; grid-row:span ${randomSpan()}"></div>`;
+        gridHtml += cell;
+    }
+    gridHtml += "</div>";
+
+//     $("#gridContainer").html(gridHtml);
+// }
+
+// Build color palettes
+colorPalettes = () => {
+    let paletteOptions = $("<div class='paletteOptions'></div>");
+    for (i = 0; i < 8; i++){
+        let tempPalette = [availableColors[Math.floor(Math.random() * availableColors.length)], availableColors[Math.floor(Math.random() * availableColors.length)], availableColors[Math.floor(Math.random() * availableColors.length)]];
+        console.log(tempPalette);
+        let paletteDiv = `<div class="paletteWrap"><div class="palette-color" style="background-color:${tempPalette[0]}" id="color1" data-color="${tempPalette[0]}"></div><div class="palette-color" style="background-color:${tempPalette[1]}" id="color2" data-color="${tempPalette[1]}"></div><div class="palette-color" style="background-color:${tempPalette[2]}" id="color3" data-color="${tempPalette[2]}"></div></div>`;
+        paletteOptions.append(paletteDiv);
+    }
+    $("#gridContainer").html(paletteOptions);
 }
-// Randomly generate a gap between grid elements
-gridHtml += `; grid-gap:${randomGap()}em'>`;
 
-
-// Build the cells HTML
-for (i = 0; i <= elements; i++) {
-    let cell = `<div class="cell" style="${patternArr[patternSelector()](colors[colorSelector()], colors[colorSelector()])}; grid-column:span ${randomSpan()}; grid-row:span ${randomSpan()}"></div>`;
-    gridHtml += cell;
-}
-gridHtml += "</div>";
-
-// console.log(gridHtml);
+// Add palette to colors
+$(".palette-color").on("click", function(e){
+    console.log("click");
+    
+})
 
 // Function to print the generated HTML/CSS on the DOM
 printFunction = () => {
@@ -74,4 +97,7 @@ printFunction = () => {
 // Event listener for when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     printFunction();
+    // colorPalettes();
 })
+
+$("#gridContainer").attr("style", patternArr[patternSelector()](colors[colorSelector()], colors[colorSelector()]))
